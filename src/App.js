@@ -14,7 +14,7 @@ function App() {
                 <Header/>
                 <div className="container container-md text-start">
                     <Routes>
-                        <Route path="/create" element={<CreateWarrior/>}/>
+                        <Route path="/create-warrior" element={<CreateWarrior/>}/>
                         <Route path="/fight-arena" element={<FightArena/>}/>
                         <Route path="/hall-of-fame" element={<HallOfFame/>}/>
                         <Route path="/" element={<Home/>}/>

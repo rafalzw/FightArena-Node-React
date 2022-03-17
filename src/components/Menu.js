@@ -7,7 +7,7 @@ export function Menu() {
                 <NavLink className="nav-link" to="/">Home</NavLink>
             </li>
             <li className="nav-item">
-                <NavLink className="nav-link" to="/create">Create Warrior</NavLink>
+                <NavLink className="nav-link" to="/create-warrior">Create Warrior</NavLink>
             </li>
             <li className="nav-item">
                 <NavLink className="nav-link" to="/fight-arena">Fight Arena</NavLink>
