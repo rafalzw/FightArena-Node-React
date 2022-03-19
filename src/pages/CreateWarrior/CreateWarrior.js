@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 
 export const CreateWarrior = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [form, setForm] = useState({
         name: '',
@@ -10,6 +10,7 @@ export const CreateWarrior = () => {
         defence: 1,
         endurance: 1,
         agility: 1,
+        totalPoints: null,
     })
 
     const [errors, setErrors] = useState({
@@ -18,6 +19,7 @@ export const CreateWarrior = () => {
         defence: '',
         endurance: '',
         agility: '',
+        BE: '',
     });
 
     const nameValidation = (name) => (name.trim().length < 3 || name.length > 25);
@@ -25,7 +27,7 @@ export const CreateWarrior = () => {
 
     const totalPoints = ([...stats]) => stats.reduce((prev, curr) => prev - curr, 10)
 
-    const buttonDisabled = Object.values(errors).filter(val => val).length;
+    // const buttonDisabled = Object.values(errors).filter(val => val).length;
 
     const submit = async e => {
         e.preventDefault();
@@ -39,15 +41,16 @@ export const CreateWarrior = () => {
                 },
                 body: JSON.stringify(form)
             });
+            if (!res.ok) {
+                throw new Error(await res.json());
+            }
             // navigate('/')
             const content = await res.json();
             console.log(content)
         } catch (err) {
-            console.log(await err.message)
-
+            setErrors({...errors, BE: err.message})
         }
     }
-
 
     useEffect(() => statsValidation(form.power) ? setErrors({
             ...errors,
@@ -85,6 +88,14 @@ export const CreateWarrior = () => {
         }) : setErrors({...errors, name: ''})
     }, [form.name])
 
+    useEffect(() => {
+        setForm({
+                ...form,
+                totalPoints: totalPoints([form.power, form.defence, form.agility, form.endurance]),
+            }
+        )
+    }, [form.power, form.defence, form.agility, form.endurance])
+
     return (
         <div className="container text-light">
             <h2>Add new Warrior:</h2>
@@ -110,8 +121,13 @@ export const CreateWarrior = () => {
                 </div>
                 <div className="form-group col-md-12">
                     <p>Total stats points to
-                        use: {totalPoints([form.power, form.defence, form.agility, form.endurance])}</p>
+                        use: {form.totalPoints}</p>
                 </div>
+
+                {errors.BE ? (
+                    <div className="alert alert-danger">{errors.BE}</div>
+                ) : null}
+
                 <div className="form-group col-md-2">
                     <label htmlFor="power" className="col-sm-2 col-form-label">Power:</label>
                     <div className="col-sm-10">
@@ -177,13 +193,9 @@ export const CreateWarrior = () => {
                     </div>
                 </div>
 
-                {/*{errors ? (*/}
-                {/*    <div className="alert alert-danger">{errors}</div>*/}
-                {/*) : null}*/}
-
                 <div className="form-group row d-flex justify-content-center">
                     <div className="mt-5">
-                        <button type="button" disabled={buttonDisabled} className="btn btn-danger px-5">Create</button>
+                        <button type="submit" className="btn btn-danger px-5">Create</button>
                     </div>
                 </div>
             </form>
