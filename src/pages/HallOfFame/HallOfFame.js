@@ -10,6 +10,15 @@ export const HallOfFame = () => {
         setData(data);
     }, []);
 
+    const warrior = data.map((warriorObj, index) => (
+        <Records
+            key={warriorObj.id}
+            index={index}
+            name={warriorObj.name}
+            wins={warriorObj.wins}
+        />
+    ));
+
     return (
         <div className="container text-light">
             <h2 className="mb-5">Hall of Fame</h2>
@@ -22,7 +31,7 @@ export const HallOfFame = () => {
                 </tr>
                 </thead>
                 <tbody>
-                <Records data={data}/>
+                {warrior}
                 </tbody>
             </table>
         </div>

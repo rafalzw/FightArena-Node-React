@@ -1,4 +1,4 @@
-export const Warrior = props => (
+export const SelectWarrior = props => (
     <option value={props.id}>
         {props.name} 🗡️
         {props.power} 🛡️

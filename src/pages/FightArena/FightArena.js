@@ -1,17 +1,21 @@
 import {useEffect, useState} from "react";
-import {Warrior} from "./Warrior/Warrior";
+import {useNavigate} from "react-router-dom";
+import {SelectWarrior} from "./SelectWarrior/SelectWarrior";
 
 export function FightArena() {
-
     const [data, setData] = useState([]);
     const [warrior1, setWarrior1] = useState('1');
     const [warrior2, setWarrior2] = useState('2');
+
+    const navigate = useNavigate();
 
     useEffect(async () => {
         const res = await fetch("/fight-arena")
         const data = await res.json()
         setData(data);
     }, []);
+
+    const toComponentFightDetails = (state) => navigate('/fight-details', {state})
 
     const submit = async e => {
         e.preventDefault();
@@ -27,16 +31,16 @@ export function FightArena() {
             if (!res.ok) {
                 throw new Error(await res.json());
             }
-            // navigate('/')
+
             const content = await res.json();
-            console.log(content)
+            toComponentFightDetails(content)
         } catch (err) {
             // setErrors({...errors, BE: err.message})
         }
     }
 
     const warriorsList = [...data].map(el => (
-        <Warrior
+        <SelectWarrior
             key={String(el.id)}
             id={el.id}
             name={el.name}
@@ -54,14 +58,18 @@ export function FightArena() {
                 <div className="container d-flex justify-content-evenly">
                     <select
                         className="form-select w-25"
-                        aria-label="warrior1"
+                        // aria-label="warrior1"
                         name="warrior1"
                         onChange={e => setWarrior1(e.target.value) }>
                         <option  value='1'>Select Warrior 1</option>
                         {warriorsList}
                     </select>
-                    <div class="p-2">VS</div>
-                    <select className="form-select w-25" aria-label="warrior2" name="warrior2" onChange={e => setWarrior2(e.target.value)}>
+                    <div className="p-2">VS</div>
+                    <select
+                        className="form-select w-25"
+                        // aria-label="warrior2"
+                        name="warrior2"
+                        onChange={e => setWarrior2(e.target.value)}>
                         <option value='2'>Select Warrior 2</option>
                         {warriorsList}
                     </select>
@@ -70,7 +78,8 @@ export function FightArena() {
                     <button
                         type="submit"
                         className="btn btn-danger px-5 btn-lg w-25 mb-2"
-                        disabled={warrior1 === warrior2 || warrior1 === '1' || warrior2 ==='2'}>Begin the fight!
+                        disabled={warrior1 === warrior2 || warrior1 === '1' || warrior2 ==='2'}
+                    >Begin the fight!
                     </button>
                     {warrior1 === warrior2 && <div className="alert alert-danger w-25">Choose two different warriors!</div>}
                 </div>

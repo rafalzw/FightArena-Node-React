@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-// import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 export const CreateWarrior = () => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [form, setForm] = useState({
         name: '',
@@ -19,7 +19,7 @@ export const CreateWarrior = () => {
         defence: '',
         endurance: '',
         agility: '',
-        BE: '',
+        backend: '',
     });
 
     const nameValidation = (name) => (name.trim().length < 3 || name.length > 25);
@@ -27,11 +27,14 @@ export const CreateWarrior = () => {
 
     const totalPoints = ([...stats]) => stats.reduce((prev, curr) => prev - curr, 10)
 
+    const toComponentAdded = (state) => navigate('/added', {state})
+
     // const buttonDisabled = Object.values(errors).filter(val => val).length;
 
     const submit = async e => {
         e.preventDefault();
         nameValidation(form.name)
+
         try {
             const res = await fetch("/create-warrior", {
                 method: 'POST',
@@ -44,11 +47,10 @@ export const CreateWarrior = () => {
             if (!res.ok) {
                 throw new Error(await res.json());
             }
-            // navigate('/')
-            const content = await res.json();
-            console.log(content)
+
+            toComponentAdded(form.name)
         } catch (err) {
-            setErrors({...errors, BE: err.message})
+            setErrors({...errors, backend: err.message})
         }
     }
 
@@ -56,28 +58,24 @@ export const CreateWarrior = () => {
             ...errors,
             power: 'Incorrect value'
         }) : setErrors({...errors, power: ''})
-
         , [form.power])
 
     useEffect(() => statsValidation(form.defence) ? setErrors({
             ...errors,
             defence: 'Incorrect value'
         }) : setErrors({...errors, defence: ''})
-
         , [form.defence])
 
     useEffect(() => statsValidation(form.agility) ? setErrors({
             ...errors,
             agility: 'Incorrect value'
         }) : setErrors({...errors, agility: ''})
-
         , [form.agility])
 
     useEffect(() => statsValidation(form.endurance) ? setErrors({
             ...errors,
             endurance: 'Incorrect value'
         }) : setErrors({...errors, endurance: ''})
-
         , [form.endurance])
 
 
@@ -99,9 +97,6 @@ export const CreateWarrior = () => {
     return (
         <div className="container text-light">
             <h2>Add new Warrior:</h2>
-            {/*{valid === false ? (*/}
-            {/*    <div className="alert alert-danger">The name must be between 3 and 25 characters.</div>*/}
-            {/*) : null}*/}
             <form className="row g-3" onSubmit={submit}>
                 <div className="form-group col-6">
                     <label htmlFor="name" className="col-sm-2 col-form-label">Name</label>
@@ -123,10 +118,6 @@ export const CreateWarrior = () => {
                     <p>Total stats points to
                         use: {form.totalPoints}</p>
                 </div>
-
-                {errors.BE ? (
-                    <div className="alert alert-danger">{errors.BE}</div>
-                ) : null}
 
                 <div className="form-group col-md-2">
                     <label htmlFor="power" className="col-sm-2 col-form-label">Power:</label>
@@ -192,13 +183,13 @@ export const CreateWarrior = () => {
                         </div>
                     </div>
                 </div>
-
-                <div className="form-group row d-flex justify-content-center">
-                    <div className="mt-5">
-                        <button type="submit" className="btn btn-danger px-5">Create</button>
-                    </div>
+                <div className="mt-5">
+                    <button type="submit" className="btn btn-danger px-5">Create</button>
                 </div>
             </form>
+            {errors.backend ? (
+                <div className="alert alert-danger mt-3 w-50">{errors.backend}</div>
+            ) : null}
         </div>
     )
 }
