@@ -11,5 +11,5 @@ addRouter
         } catch(err) {
             return res.status(422).json(err.message);
         }
-        res.status(201).json('Pomyślnie dodano')
+        res.status(201).json('Successfully added!')
     });

@@ -7,5 +7,5 @@ hallOfFameRouter
     .get('/', async (req, res) => {
         const topWarriorsList = await WarriorRecord.listTop();
 
-        res.json(topWarriorsList);
+        res.status(200).json(topWarriorsList);
     });

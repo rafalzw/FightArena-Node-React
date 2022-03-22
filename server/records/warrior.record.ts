@@ -83,7 +83,7 @@ export class WarriorRecord {
     }
 
     static async listTop(): Promise<WarriorRecord[]> {
-        const [results] = await pool.execute('SELECT `name`, `wins` FROM `warriors` ORDER BY `wins` DESC LIMIT 10') as [WarriorRecord[], FieldPacket[]];
+        const [results] = await pool.execute('SELECT `id`, `name`, `wins` FROM `warriors` ORDER BY `wins` DESC LIMIT 10') as [WarriorRecord[], FieldPacket[]];
         return results;
     }
 }

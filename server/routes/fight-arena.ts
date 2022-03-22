@@ -11,3 +11,21 @@ fightRouter
 
         res.status(201).json(warriorsList)
     })
+    .post('/fight', async (req, res) => {
+        const warrior1 = await WarriorRecord.getOne(req.body.warrior1);
+        const warrior2 = await WarriorRecord.getOne(req.body.warrior2);
+
+        if (warrior1.id === warrior2.id) {
+            throw new ValidationError('Choose two different warriors');
+        }
+
+        const arena = new Arena(warrior1, warrior2);
+        arena.fight();
+        const fightDetails = arena.details;
+
+        res.status(200).json( {
+            fightDetails,
+            warrior1,
+            warrior2,
+        });
+    });
