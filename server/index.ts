@@ -1,8 +1,4 @@
-
-// import * as express from "express";
-
-const express = require('express')
-// import 'express-async-errors';
+import * as express from "express";
 
 import {addRouter} from "./routes/create-warrior";
 import { fightRouter } from './routes/fight-arena';
