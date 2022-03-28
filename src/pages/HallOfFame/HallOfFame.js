@@ -4,10 +4,12 @@ import {Records} from "./Records";
 export const HallOfFame = () => {
     const [data, setData] = useState([]);
 
-    useEffect(async () => {
-        const res = await fetch("/hall-of-fame")
-        const data = await res.json()
-        setData(data);
+    useEffect(() => {
+        (async() => {
+            const res = await fetch("/hall-of-fame")
+            const data = await res.json()
+            setData(data);
+        })();
     }, []);
 
     const warrior = data.map((warriorObj, index) => (
